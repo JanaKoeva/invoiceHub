@@ -7,9 +7,10 @@ import { CommonModule } from '@angular/common';
 import { DemoMaterialModule } from 'src/app/demo-material-module';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-import { matchPasswordValidator } from 'src/app/utils/matchPasswordsValidator';
+import { matchPasswordValidator } from '../../utils/matchPasswordsValidator';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { SnackbarService } from '../../services/openSnackBar.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 
 
@@ -36,7 +37,7 @@ export class RegisterComponent {
   isOptional = false;
 
 
-  constructor( private router: Router, private userService: UserService, private fb: FormBuilder, private http: HttpClient, private snackBar:SnackbarService) { }
+  constructor( private authService:AuthService, private router: Router, private userService: UserService, private fb: FormBuilder, private http: HttpClient, private snackBar:SnackbarService) { }
 
   ngOnInit(): void {
    
@@ -132,10 +133,19 @@ export class RegisterComponent {
 
      
         this.userService.register(combinedData).subscribe({
-          next: (response: any) => {
-            // Successful registration
-            this.snackBar.openSnackBar('Registration successful! Welcome, ' + combinedData.email, 'Close');
-            this.router.navigate(['/']);
+          next: (response: any) => { const userData = {
+            idToken: response.idToken, // Получено от бекенда
+            userId: response.localId,  // Получено от бекенда
+            email: combinedData.email,
+          };
+  
+          localStorage.setItem('firebaseIdToken', userData.idToken);
+          localStorage.setItem('firebaseUserEmail', userData.email);
+          localStorage.setItem('firebaseUserId', userData.userId);
+  
+          this.authService.setUserData(userData);
+          this.snackBar.openSnackBar('Registration and login successful!', 'Close');
+          this.router.navigate(['/']); 
           },
           error: (error: any) => {
             // Handling errors from Firebase

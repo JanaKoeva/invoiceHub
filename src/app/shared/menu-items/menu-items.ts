@@ -8,11 +8,12 @@ export interface Menu {
 }
 
 const MENUITEMS = [
-  { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'av_timer', auth:'authService.isAuthenticated()' },
+  { state: 'dashboard', name: 'Dashboard', type: 'link', icon: 'all_inclusive', auth:'authService.isAuthenticated()' },
   {state: 'invoices/invoice-form', name: 'Add new Invoice', type: 'link', icon: 'web' , auth:'authService.isAuthenticated()'},
-  { state: 'button', type: 'link', name: 'Buttons', icon: 'crop_7_5', auth:'authService.isAuthenticated()' },
-  { state: 'grid', type: 'link', name: 'Grid List', icon: 'view_comfy', auth:'authService.isAuthenticated()' },
-  { state: 'customers/customerForm', type: 'link', name: 'Add new custumer', icon: 'view_list',auth:'authService.isAuthenticated()' },
+  { state: 'button', type: 'link', name: 'Invoices List', icon: 'view_headline', auth:'authService.isAuthenticated()' },
+  { state: 'products/productForm', type: 'link', name: 'Add new product', icon: 'av_timer', auth:'authService.isAuthenticated()' },
+  { state: 'products/productsList', type: 'link', name: 'Products List', icon: 'view_headline', auth:'authService.isAuthenticated()' },
+  { state: 'customers/customerForm', type: 'link', name: 'Add new custumer', icon: 'adb',auth:'authService.isAuthenticated()' },
   { state: 'customers/customersList', type: 'link', name: 'Customers list', icon: 'view_headline',auth:'authService.isAuthenticated()' },
   { state: 'tabs', type: 'link', name: 'Tabs', icon: 'tab' },
   { state: 'stepper', type: 'link', name: 'Stepper', icon: 'web' },

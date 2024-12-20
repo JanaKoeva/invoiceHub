@@ -1,0 +1,176 @@
+<!-- <app-stepper></app-stepper> -->
+<!-- ============================================================== -->
+<!-- row -->
+<!-- ============================================================== -->
+
+<!-- <app-stepper></app-stepper> -->
+<!-- ============================================================== -->
+<!-- row -->
+<!-- ============================================================== -->
+<div class="row">
+    <!-- Card column -->
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+         
+  
+          <mat-card-title
+            >Edit Product form
+          </mat-card-title>
+
+        
+          <mat-horizontal-stepper linear #stepperoptional>
+            <mat-step [stepControl]="optionalfirstFormGroup">
+              <form [formGroup]="optionalfirstFormGroup">
+                <ng-template matStepLabel>Check out your product data</ng-template>
+  
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    placeholder="Product name"
+                    formControlName="productName"
+                    name="productName"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup
+                        .get('productName')
+                        ?.hasError('required')">
+                  Product name is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup
+                        .get('productName')
+                        ?.hasError('pattern')
+                    "
+                  >
+                  Product name must be at least 3 characters long.
+                  </mat-error>
+                </mat-form-field>
+  
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    placeholder="Product code"
+                    formControlName="productCode"
+                    required
+                    name="productCode"
+                  />
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup.get('productCode')?.hasError('required')
+                    "
+                  >
+                  Product code is requires.Please select from the list.
+                  </mat-error>
+                </mat-form-field>
+  
+            
+                  <!-- prefix -->
+                  <mat-form-field appearance="outline" fxFlex="20">
+                    <mat-label>Pack</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="pack"
+                      placeholder="Pack"
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('pack')?.hasError('required')
+                      "
+                    >
+                      Please fill packing
+                     
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- VAT-->
+                  <mat-form-field appearance="outline" fxFlex="80">
+                    <mat-label>Price</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="price"
+                      placeholder="Price"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('price')?.hasError('required')
+                      "
+                    >
+                      The price number is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('price')?.hasError('pattern')
+                      "
+                    >
+                      The price will be greater than 0.00.
+                    </mat-error>
+                  </mat-form-field>
+              
+  
+              
+                <div>
+                  <button
+                    mat-raised-button
+                    matStepperNext
+                    color="accent"
+                    type="submit"
+                    [disabled]="optionalfirstFormGroup.invalid"
+                  >
+                    Next
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+  
+            <!-- DONE STEP -->
+            <mat-step>
+              <ng-template matStepLabel>Update</ng-template>
+              You are now done.
+  
+              <ng-template matStepLabel>Review Your Data</ng-template>
+  
+              <h3>Edited Products Information</h3>
+              <div>
+                <p>
+                  <strong>Product Name:</strong>
+                  {{ optionalfirstFormGroup.get("productName")?.value }}
+                </p>
+                <p>
+                  <strong>Code:</strong>
+                  {{ optionalfirstFormGroup.get("productCode")?.value }}
+                </p>
+                <p>
+                  <strong>Pack:</strong>
+                  {{ optionalfirstFormGroup.get("pack")?.value }}
+                </p>
+                <p>
+                  <strong>Price:</strong>
+                  {{ optionalfirstFormGroup.get("price")?.value }}
+                </p>
+              </div>
+  
+              <div class="button-row m-t-20">
+                <button mat-raised-button color="primary" matStepperPrevious>
+                  Back
+                </button>
+                <button mat-raised-button color="warn" (click)="updateProduct()">
+                  Update
+                </button>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+

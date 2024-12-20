@@ -44,6 +44,25 @@ export class AppInterceptor implements HttpInterceptor {
         withCredentials: true,
       })
     }
+    else if (req.url.startsWith('/api/database/products/create/')) {
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      const urlParts = req.url.split('/');
+      const collection = urlParts[urlParts.length - 1];
+      const userId = urlParts[urlParts.length - 2];
+
+      console.log(userId);
+      console.log(collection);
+
+      console.log(`${firestoreUrl}/users/${userId}/${collection}`);
+
+
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}`),
+        withCredentials: true,
+      })
+
+    }
     else if (req.url.startsWith('/api/database/customer/create/')) {
 
       const firestoreUrl = environment.apiEndpoints.firestore;
