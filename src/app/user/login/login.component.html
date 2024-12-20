@@ -1,0 +1,36 @@
+<mat-card>
+  <mat-card-content>
+    <mat-card-title>Login Form</mat-card-title>
+    <form [formGroup]="loginForm">
+      <mat-form-field>
+        <ng-template matStepLabel>Email</ng-template>
+        <input
+          matInput
+          placeholder="Email"
+          #message
+          type="text"
+          formControlName="email"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input 
+        matInput 
+        placeholder="Password" 
+        #action 
+        type="text"
+        formControlName="password"
+        />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="login()"
+        [disabled]="loginForm.invalid"
+        
+      >
+        Login
+      </button>
+    </form>
+    <p>Don't have an account? <a href="/user/register">Register here</a>.</p>
+  </mat-card-content>
+</mat-card>

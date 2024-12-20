@@ -1,0 +1,120 @@
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.header-column {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.header-column.left {
+  text-align: left;
+}
+
+.header-column.center {
+  text-align: center;
+}
+
+.header-column.right {
+  text-align: right;
+}
+
+.invoice-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.invoice-summary {
+  padding: 10px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+}
+
+.summary-words {
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+
+// Wrapper for the entire table
+.mat-elevation-z8 {
+  display: block; // Use block layout for the table wrapper
+  overflow-x: auto; // Add horizontal scroll for small screens
+  width: 100%; // Full width of the container
+}
+
+// Table header row styling
+.mat-header-row {
+  display: flex; // Flex layout for columns
+  justify-content: space-between; // Distribute columns evenly
+  align-items: center; // Vertically center header content
+  background-color: #f5f5f5; // Light gray background for header
+  font-weight: bold; // Bold header text
+}
+
+// Table data rows styling
+.mat-row {
+  display: flex; // Flex layout for columns
+  justify-content: space-between; // Distribute columns evenly
+  align-items: center; // Vertically center row content
+  border-bottom: 1px solid #e0e0e0; // Add bottom border for rows
+}
+
+// Common cell styles (header and data)
+.mat-header-cell,
+.mat-cell {
+  flex: 1; // Default equal column width
+  padding: 12px; // Padding inside cells
+  text-align: center; // Center-align text
+  white-space: nowrap; // Prevent text wrapping
+  overflow: hidden; // Hide overflowing text
+  text-overflow: ellipsis; // Add ellipsis for overflowed text
+}
+
+// Specific column widths for proportional layout
+.mat-column-product {
+  flex: 2; // Product column gets double the space
+}
+
+.mat-column-quantity {
+  flex: 1; // Quantity column takes equal space
+}
+
+.mat-column-price {
+  flex: 1; // Price column takes equal space
+}
+
+.mat-column-total {
+  flex: 1.5; // Total column takes slightly more space
+}
+
+// Responsive design for smaller screens
+@media screen and (max-width: 768px) {
+  .mat-header-cell,
+  .mat-cell {
+    flex: 1; // Reset all columns to equal width for compact view
+    font-size: 12px; // Reduce font size for small screens
+    padding: 8px; // Adjust padding for smaller screens
+  }
+
+  .mat-column-product {
+    flex: 1.5; // Product column still gets priority
+  }
+}

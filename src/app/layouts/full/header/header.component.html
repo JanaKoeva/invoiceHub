@@ -1,0 +1,33 @@
+<!-- ============================================================== -->
+<!-- Profile - style you can find in header.scss -->
+<!-- ============================================================== -->
+
+<button
+  [matMenuTriggerFor]="profile"
+  mat-icon-button
+  class="m-r-5 p-0 d-flex jc-c align-items-center"
+  *ngIf="!authService.isAuthenticated()"
+>
+  Enter
+</button>
+<button
+  [matMenuTriggerFor]="profile"
+  mat-icon-button
+  class="m-r-5 p-0 d-flex jc-c align-items-center"
+  *ngIf="authService.isAuthenticated()"
+>{{email}} Profile
+</button>
+<mat-menu #profile="matMenu" class="mymegamenu">
+  <button  *ngIf="!authService.isAuthenticated()" mat-menu-item routerLink="/user/register">
+    <mat-icon  >settings</mat-icon> Register
+  </button>
+  <button  *ngIf="!authService.isAuthenticated()" mat-menu-item routerLink="/user/login">
+    <mat-icon>settings</mat-icon> Log in
+  </button>
+  <button *ngIf="authService.isAuthenticated()" mat-menu-item><mat-icon>settings</mat-icon> Settings</button>
+  <button *ngIf="authService.isAuthenticated()" mat-menu-item><mat-icon>account_box</mat-icon> Profile</button>
+  <button *ngIf="authService.isAuthenticated()" mat-menu-item>
+    <mat-icon>notifications_off</mat-icon> Disable notifications
+  </button>
+  <button *ngIf="authService.isAuthenticated()" (click)="logout()" mat-menu-item><mat-icon>exit_to_app</mat-icon> Sign Out</button>
+</mat-menu>
