@@ -8,7 +8,7 @@ import { Observable, startWith, map } from 'rxjs';
 import { DemoMaterialModule } from '../../demo-material-module';
 import { CustomerService } from '../../services/customer.service';
 import { SnackbarService } from '../../services/openSnackBar.service';
-import { CustomerFormComponent } from "../customer-form/customer-form.component";
+
 import { ChangeDetectorRef } from '@angular/core';
 import { T } from '@angular/cdk/keycodes';
 
@@ -16,14 +16,14 @@ import { T } from '@angular/cdk/keycodes';
   selector: 'app-edit-customer',
   standalone: true,
   imports: [CommonModule, DemoMaterialModule, FormsModule, ReactiveFormsModule],
-  templateUrl: './edit-customer.component.html',
-  styleUrl: './edit-customer.component.scss',
+  templateUrl: './edit-invoice.component.html',
+  styleUrl: './edit-invoice.component.scss',
   providers: [{
     provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false }
   }],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class EditCustomerComponent {
+export class EditInvoiceComponent {
 
   countries: { name: string, prefix: string }[] = [];
   filteredCountries!: Observable<string[]>;
@@ -70,7 +70,7 @@ export class EditCustomerComponent {
 
 
       this.optionalfirstFormGroup.patchValue({
-        companyName: responceFields.companyName?.stringValue||'',
+        companyName: responceFields.companyName?.stringValue,
         name: responceFields.name?.stringValue || '',
         email: responceFields.email?.stringValue || '',
         phone: responceFields.phone?.stringValue || '',
@@ -114,6 +114,8 @@ export class EditCustomerComponent {
       this.setupFilter();
     });
   }
+
+
 
   //filter
 

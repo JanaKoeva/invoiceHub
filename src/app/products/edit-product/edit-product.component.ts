@@ -48,9 +48,10 @@ export class EditProductComponent {
     this.editProduct(this.route.snapshot.params['id'])
   }
 
+  
 
   editProduct(id: any): void {
-    debugger
+  
     if (!id) {
       console.error('Product ID is missing!');
       this.snackBar.openSnackBar('Product ID is missing!', 'Close');

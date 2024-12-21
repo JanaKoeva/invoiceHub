@@ -118,3 +118,15 @@
     flex: 1.5; // Product column still gets priority
   }
 }
+.invoice-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 16px;
+}
+
+.left-button {
+  position: absolute;
+  top: 0px; /* Adjust vertical positioning */
+  left: 150px; /* Adjust horizontal positioning */
+}

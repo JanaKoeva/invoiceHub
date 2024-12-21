@@ -2,14 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { UserService } from './user.service';
-import { Subject } from 'rxjs';
+import { Subject, catchError, defaultIfEmpty, map, of, switchMap } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceService {
-
+  userId:any
+  idToken:any
   initialInvoiceNumber: string = '1000000001'; // Start invoice number
   invoiceNumber!: string;
   lastInvoiceNumber: number = 0;
@@ -54,23 +55,43 @@ return  this.newInvoiceNumber
   //   return `INV-${datePart}-${this.invoiceNumber}`;
   // }
 
+getAll(): any {
+  
+  return this.authService.getUserData().pipe(
+    switchMap((userData) => {
+      console.log(userData);
+      this.userId = userData?.userId;
+      this.idToken = userData?.idToken
 
+      const url = `/api/database/loaddata/${this.userId}/`;
+      
+
+      return this.http.get<{ documents: [] }>(url).pipe(
+        map(response => response.documents || []),
+        catchError((error) => {
+          console.error('Error fetching products:', error);
+          return of([]);
+        })
+      );
+    }),
+
+    defaultIfEmpty([])
+  );
+}
 
   // Създайте нова фактура
-  createInvoice(userId: string, invoiceNumber: string, clientName: string, amount: number): Observable<any> {
-    const url = `${'/api/database/create'}/users/${userId}/invoices`;
+  createInvoice(data:any): Observable<any> {
+    const url = `${'/api/database/create'}/users/${data.userId}/invoices`;
     const body = {
       fields: {
-        invoiceNumber: { stringValue: invoiceNumber },
-        client: { stringValue: clientName },
-        amount: { doubleValue: amount },
-        date: { timestampValue: new Date().toISOString() }
+        invoiceNumber: { stringValue: data.invoiceNumber },
+        customer: { stringValue: data.customer },
+        amount: { doubleValue: data.amount },
+        date: { timestampValue: data.date}
       }
     };
     return this.http.post(url, body, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
+      
     });
   }
 

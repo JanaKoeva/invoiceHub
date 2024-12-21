@@ -7,6 +7,9 @@ import { environment } from '../../environment/environment.development';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthResponse } from '../interfaces/authResponce';
 import { AuthService } from './auth.service';
+import { Firestore } from '@angular/fire/firestore';
+import { collection, getDocs } from 'firebase/firestore';
+
 
 
 @Injectable({
@@ -16,7 +19,7 @@ export class UserService {
 
   ACCESS_TOKEN: any
 
-  constructor(private authService: AuthService, private http: HttpClient, private afAuth: AngularFireAuth, private firestore: AngularFirestore) {
+  constructor( private authService: AuthService, private http: HttpClient, private afAuth: AngularFireAuth, private firestore: AngularFirestore) {
 
   }
 
@@ -88,14 +91,14 @@ export class UserService {
   }
 
   private storeUserInFirestore(userId: string, idToken: string, firestorePayload: any): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    });
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    //   'Authorization': `Bearer ${idToken}`
+    // });
 
     const userUrl = `/api/create/register/${userId}`;
 
-    return this.http.post(userUrl, firestorePayload, { headers });
+    return this.http.post(userUrl, firestorePayload);
   }
 
   private convertToFirestoreFields(data: any): any {
@@ -122,7 +125,33 @@ export class UserService {
     return firestoreFields;
   }
 
+  getFullCompanyData(): Observable<any> {
+    return this.authService.getUserData().pipe(
+      switchMap((user) => {
+        if (!user || !user.userId || !user.idToken) {
+          throw new Error('User not authenticated');
+        }
 
+        const idToken = user.idToken;
+        const userId = user.userId;
+        return this.getLastSegmentForUser(userId).pipe(
+          switchMap((lastSegment) => {
+            console.log('Last Segment:', lastSegment);
+  
+            // Update URL structure based on userId and lastSegment
+            const url = `/api/database/loadFullData/${userId}/${userId}/${lastSegment}`;
+  
+            return this.http.get<any>(url).pipe(
+              catchError((error) => {
+                console.error('Error fetching company data', error);
+                return throwError(() => error);
+              })
+            );
+          })
+        );
+      })
+      
+    )}
 
 
   getCompanyData(): Observable<any> {
@@ -134,7 +163,7 @@ export class UserService {
 
         const idToken = user.idToken;
         const userId = user.userId;
-
+       
         const headers = new HttpHeaders({
           Authorization: `Bearer ${idToken}`
         });
@@ -151,6 +180,21 @@ export class UserService {
       })
     );
   }
+
+
+  getLastSegmentForUser(userId: string): Observable<string> {
+    const userCollectionPath = `/users/${userId}/${userId}`;
+    return this.firestore.collection(userCollectionPath).get().pipe(
+      map((snapshot) => {
+        const lastSegment = snapshot.docs.map(doc => doc.id).pop();
+        if (!lastSegment) {
+          throw new Error('No last segment found for user.');
+        }
+        return lastSegment;
+      })
+    );
+  }
+
   logout() {
     localStorage.clear();
   }

@@ -88,12 +88,25 @@ export class AppInterceptor implements HttpInterceptor {
       let urlParts = req.url.split('/')
       const collection = urlParts[urlParts.length - 1];
       const userId = urlParts[urlParts.length - 2]
-
+// /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
       req = req.clone({
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}`),
         withCredentials: true,
       })
-    } else if (req.url.startsWith('/api/database/getSingle')) {
+    } else if (req.url.startsWith('/api/database/loadFullData/')) {
+
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      let urlParts = req.url.split('/')
+      const collection = urlParts[urlParts.length - 1];
+      const userId = urlParts[urlParts.length - 2]
+// /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${userId}/${collection}`),
+        withCredentials: true,
+      })
+    }
+    else if (req.url.startsWith('/api/database/getSingle')) {
       console.log(req.url);
 
       const firestoreUrl = environment.apiEndpoints.firestore;

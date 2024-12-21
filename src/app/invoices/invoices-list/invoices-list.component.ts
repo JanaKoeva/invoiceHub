@@ -22,11 +22,12 @@ import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../interfaces/customer';
 import { HttpClient } from '@angular/common/http';
 import { SnackbarService } from '../../services/openSnackBar.service';
-import { ProductsService } from 'src/app/services/products.service';
+import { InvoiceService } from 'src/app/services/invoice.service';
+import { Invoice } from 'src/app/interfaces/invoice';
 
 
 @Component({
-  selector: 'app-products-list',
+  selector: 'app-invoices-list',
   standalone: true,
   imports:
     [RouterModule,
@@ -47,24 +48,29 @@ import { ProductsService } from 'src/app/services/products.service';
       MatTableModule,
     ]
   ,
-  templateUrl: './products-list.component.html',
-  styleUrl: './products-list.component.scss',
+  templateUrl: './invoices-list.component.html',
+  styleUrl: './invoices-list.component.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
-export class ProductsListComponent {
-  displayedColumns: string[] = ['code', 'name', 'pack', 'price', 'action'];
+export class InvoicesListComponent {
+  displayedColumns: string[] = ['id', 'Number', 'Date', 'Customer', 'VAt Number', 'Amount', 'action'];
   dataSource = new MatTableDataSource<any>([]);
-  products$!: Observable<Array<Customer>>;
-  products: Customer[] = [];
-  product!: Customer;
+  customers$!: Observable<Array<Customer>>;
+  customers: Customer[] = [];
+  customer!: Customer;
   userId: any;
-  prductId: any;
+  customerId: any;
   private customersSubscription!: Subscription;
+  invoices!: any;
+
+  // @ViewChild('shoes') shoes: MatSelectionList | undefined;
+  // typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
 
 
+  // customers!: Observable<any[]>;  // Observable to hold customer data
 
-  constructor(private http: HttpClient, public snackBar: SnackbarService, private route: ActivatedRoute, private router: Router, private firestore: AngularFirestore, private productService: ProductsService) {
+  constructor(private http: HttpClient, private invoiceServices:InvoiceService, public snackBar: SnackbarService, private route: ActivatedRoute, private router: Router, private firestore: AngularFirestore, private customerService: CustomerService) {
 
   }
 
@@ -72,71 +78,54 @@ export class ProductsListComponent {
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
-    this.prductId = this.route.snapshot.params['productId'];
+    this.customerId = this.route.snapshot.params['customerId'];
 
+    this.invoiceServices.getAll().subscribe((customers: any[]) => {
 
-    console.log(this.products);
-    const products = this.route.snapshot.data['products']
+      const transformedCustomers = customers.map((invoice: {
+         id: string, name: string; 
+         fields: { 
+          
+          id: { stringValue: any; }; 
+         number: { stringValue: any; }; 
+         date: { stringValue: any; }; 
+         custumer: { stringValue: any; }; 
+         vat: { stringValue: any; },
+         amount: { stringValue: any; } }; }) => (
+        {
+          id: invoice.name.split('/').pop(),
+          date:invoice.fields.date?.stringValue || 'N/A',
+          number: invoice.fields.number?.stringValue || 'N/A',
+          custumer: invoice.fields.custumer?.stringValue || 'N/A',
+          vat: invoice.fields.vat?.stringValue || 'N/A',
+          amount: invoice.fields.amount?.stringValue || 'N/A',
+          
+        }));
+      this.dataSource.data = transformedCustomers;
+      this.invoices = this.dataSource.data||[];
 
-    const transformedCustomers = products.map((customer: {
-      id: string,
-      name: string;
-      fields: {
-        productName: { stringValue: any; },
-        price: { stringValue: any; },
-        pack: { stringValue: any; },
-        productCode: { stringValue: any; };
-        vat: { stringValue: any; }
-      }
-    }) => (
-      {
-        id: customer.name.split('/').pop(),
-        name: customer.fields.productName?.stringValue || 'N/A',
-        code: customer.fields.productCode?.stringValue || 'N/A',
-        pack: customer.fields.pack?.stringValue || 'N/A',
-        price: customer.fields.price?.stringValue || 'N/A',
-
-      }));
-    this.dataSource.data = transformedCustomers;
-    console.log(this.dataSource.data);
-
-    this.products = this.dataSource.data || [];
-    console.log(this.products);
-  }
-
-
-
-  selectProduct(product: any): void {
-    console.log('Selected product:', product);
-
-    this.router.navigate(['/invoices/invoiceForm'], {
-      queryParams: { productId: product },
     });
-  }
+  
 
-  deleteProduct(id: any): void {
-
-    this.prductId = id;
-
-
-    if (!this.prductId) {
-      console.error('Product ID is missing.');
+  
+    if (!this.customerId) {
+      console.error('Customer ID is missing.');
       return;
     }
 
 
     // Confirm before deleting
-    const confirmation = window.confirm(`Are you sure you want to delete the customer with ID ${this.prductId}?`);
+    const confirmation = window.confirm(`Are you sure you want to delete the customer with ID ${this.customerId}?`);
     if (!confirmation) {
       return;
     }
 
-    this.productService.deleteProduct(this.prductId).subscribe(
+    this.customerService.deleteCustomer(this.customerId).subscribe(
       () => {
-        this.snackBar.openSnackBar(`${this.prductId} isdeleted successfully.`, 'Close');
-        this.loadProducts();
+        this.snackBar.openSnackBar(`${this.customerId} isdeleted successfully.`, 'Close');
+        this.loadCustomers();
         // this.customers = this.customers.filter(customer =>this.customer.id !== this.customerId);
-        this.router.navigate(['products/productsList']);
+        this.router.navigate(['customers/customerList']);
       },
       (error) => {
         console.error('Error deleting customer:', error);
@@ -147,20 +136,19 @@ export class ProductsListComponent {
 
   }
 
-
-
-  loadProducts() {
-    this.productService.getProducts().subscribe(
+  loadCustomers() {
+    this.customerService.getCustomers().subscribe(
       (customers: any[]) => {
         // Transform the customer data
         const transformedCustomers = customers.map((customer: { id: string, fields: any }) => ({
           id: customer.id, // Assuming you get the ID as 'id'
-          name: customer.fields.name?.stringValue || 'N/A',
-          code: customer.fields.productCode?.stringValue || 'N/A',
-          price: customer.fields.price?.stringValue || 'N/A',
-          pack: customer.fields.pack?.stringValue || 'N/A',
+          name: customer.fields.companyName?.stringValue || 'N/A',
+          vat: customer.fields.vat?.stringValue || 'N/A',
+          email: customer.fields.email?.stringValue || 'N/A',
+          phone: customer.fields.phone?.stringValue || 'N/A',
+          address: customer.fields.address?.stringValue || 'N/A'
         }));
-
+        
         // Set the transformed data to the dataSource
         this.dataSource.data = transformedCustomers;
       },
@@ -169,6 +157,14 @@ export class ProductsListComponent {
       }
     );
   }
+  selectInvoice(invoice: any): void {
+    console.log('Selected inv:', invoice);
+    
+    this.router.navigate(['/invoices/invoiceForm'], {
+      queryParams: { invoceId: invoice },
+    });
+  }
+  
   ngOnDestroy(): void {
     // Unsubscribe to avoid memory leaks
     if (this.customersSubscription) {
@@ -176,4 +172,5 @@ export class ProductsListComponent {
     }
   }
 }
+
 

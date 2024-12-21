@@ -94,6 +94,8 @@ export class CustomersListComponent {
     });
   }
 
+
+  
   deleteCustomer(id: any): void {
     this.customerId = id;
     
@@ -126,6 +128,15 @@ export class CustomersListComponent {
 
   }
 
+  selectCustomer(customer: any): void {
+    console.log('Selected Customer:', customer);
+    
+    this.router.navigate(['/invoices/invoiceForm'], {
+      queryParams: { customerId: customer },
+    });
+  }
+
+
   loadCustomers() {
     this.customerService.getCustomers().subscribe(
       (customers: any[]) => {
@@ -147,45 +158,7 @@ export class CustomersListComponent {
       }
     );
   }
-    // .subscribe({
-    //   next: () => {
-    //     console.log('Customer deleted successfully');
-    //     // Redirect to customer list or other desired page
-    //     this.router.navigate(['/customers']);
-    //   },
-    //   error: (err) => {
-    //     console.error('Error deleting customer:', err);
-    //   }
-    // });
-
-
-
-
-    // updateCustomer(customerId: string, updatedData: any): Observable<any> {
-    //   const url = `/${customerId}`;
-
-    //   // Format the body data to match the Firestore structure
-    //   const body = {
-    //     fields: this.convertToFirestoreFields(updatedData)
-    //   };
-
-    //   return this.http.patch(url, body);
-    // }
-
-
-    // getCustomerData(customerId: string): Observable<any> {
-    //   const url = `/${customerId}`;
-    //   return this.http.get(url);
-    // }
-
-    // Convert data to the Firestore fields format
-    // private convertToFirestoreFields(data: any): any {
-    //   const fields: any = {};
-    //   Object.keys(data).forEach(key => {
-    //     fields[key] = { stringValue: data[key] };
-    //   });
-    //   return fields;
-    // }
+  
     ngOnDestroy(): void {
       // Unsubscribe to avoid memory leaks
       if (this.customersSubscription) {

@@ -1,0 +1,393 @@
+<!-- <app-stepper></app-stepper> -->
+<!-- ============================================================== -->
+<!-- row -->
+<!-- ============================================================== -->
+
+<!-- <app-stepper></app-stepper> -->
+<!-- ============================================================== -->
+<!-- row -->
+<!-- ============================================================== -->
+<div class="row">
+    <!-- Card column -->
+    <div class="col-12">
+      <mat-card>
+        <mat-card-content>
+         
+  
+          <mat-card-title
+            >Customer form
+          </mat-card-title>
+
+        
+          <mat-horizontal-stepper linear #stepperoptional>
+            <mat-step [stepControl]="optionalfirstFormGroup">
+              <form [formGroup]="optionalfirstFormGroup">
+                <ng-template matStepLabel>Check out your company data</ng-template>
+  
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    placeholder="Company name"
+                    formControlName="companyName"
+                    name="companyName"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup
+                        .get('companyName')
+                        ?.hasError('required')
+                    "
+                  >
+                    Company name is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup
+                        .get('companyName')
+                        ?.hasError('pattern')
+                    "
+                  >
+                    Company name must be at least 3 characters long.
+                  </mat-error>
+                </mat-form-field>
+  
+                <mat-form-field>
+                  <input
+                    type="text"
+                    matInput
+                    [matAutocomplete]="auto"
+                    placeholder="Conuntry"
+                    formControlName="country"
+                    required
+                    name="country"
+                  />
+                  <mat-autocomplete
+                    #auto="matAutocomplete"
+                    (optionSelected)="onCountrySelect($event)"
+                  >
+                    <mat-option
+                      *ngFor="let country of filteredCountries | async"
+                      [value]="country"
+                    >
+                      {{ country }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup.get('country')?.hasError('required')
+                    "
+                  >
+                    Country name is requires.Please select from the list.
+                  </mat-error>
+                </mat-form-field>
+  
+             
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="space-between center"
+                  fxLayoutGap="16px"
+                  style="width: 100%"
+                >
+                  <!-- prefix -->
+                  <mat-form-field appearance="outline" fxFlex="20">
+                    <mat-label>Prefix</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="prefix"
+                      readonly
+                      placeholder="Prefix"
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('prefix')?.hasError('required')
+                      "
+                    >
+                      Please select your country and prefix will fill
+                      automatically.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- VAT-->
+                  <mat-form-field appearance="outline" fxFlex="80">
+                    <mat-label>VAT Number</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="vat"
+                      placeholder="Enter VAT number"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('vat')?.hasError('required')
+                      "
+                    >
+                      The VAT number is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('vat')?.hasError('pattern')
+                      "
+                    >
+                      The VAT number must be at between 9 and 12 characters long
+                      and contain only digits.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+  
+                <mat-form-field>
+                  <mat-label>Address</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="address"
+                    placeholder="Enter yoyr company address"
+                    required
+                  />
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup.get('address')?.hasError('required')
+                    "
+                  >
+                    The address is required.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup.get('address')?.hasError('minlength')
+                    "
+                  >
+                    The address must be at between 9 and 12 characters long.
+                  </mat-error>
+                  <mat-error
+                    *ngIf="
+                      optionalfirstFormGroup.get('address')?.hasError('maxlength')
+                    "
+                  >
+                    The address must be at between 9 and 12 characters long.
+                  </mat-error>
+                </mat-form-field>
+  
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="start center"
+                  fxLayoutGap="10px"
+                >
+                  <!--Bank name  -->
+                  <mat-form-field appearance="outline" fxFlex="20">
+                    <mat-label>Bank name</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="bankName"
+                      placeholder="Bank name"
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup
+                          .get('bankName')
+                          ?.hasError('required')
+                      "
+                    >
+                      The bank name is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup
+                          .get('bankName')
+                          ?.hasError('pattern') ||
+                        optionalfirstFormGroup
+                          .get('bankName')
+                          ?.hasError('minlength')
+                      "
+                    >
+                      The bank name must be at between 3 and 30 characters long.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- IBAN-->
+                  <mat-form-field appearance="outline" fxFlex="80">
+                    <mat-label>IBAN</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="iban"
+                      placeholder="Enter IBAN"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('iban')?.hasError('required')
+                      "
+                    >
+                      The IBAN is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('iban')?.hasError('pattern')
+                      "
+                    >
+                      Please enter valid IBAN.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- SWIFT-->
+                  <mat-form-field appearance="outline" fxFlex="80">
+                    <mat-label>Bank code/SWIFT</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="swift"
+                      placeholder="Enter SWIFT/BIC"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('swift')?.hasError('required')
+                      "
+                    >
+                      The IBAN is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('swift')?.hasError('pattern')
+                      "
+                    >
+                      Please enter valid SWIFT.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!--name  -->
+                  <mat-form-field appearance="outline" fxFlex="20">
+                    <mat-label>Name</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="name"
+                      placeholder="Name"
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('name')?.hasError('required')
+                      "
+                    >
+                      Name is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('name')?.hasError('minlength')
+                      "
+                    >
+                      Name must be at least 3 characters long.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- email -->
+                  <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input
+                      matInput
+                      placeholder="Email"
+                      formControlName="email"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('email')?.hasError('required')
+                      "
+                    >
+                      Name is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('email')?.hasError('pattern')
+                      "
+                    >
+                      Please enter a valid email.
+                    </mat-error>
+                  </mat-form-field>
+  
+                  <!-- phone -->
+                  <mat-form-field>
+                    <mat-label>Telephone number</mat-label>
+                    <input
+                      matInput
+                      placeholder="Phone number"
+                      formControlName="phone"
+                      required
+                    />
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('phone')?.hasError('required')
+                      "
+                    >
+                      Telephone number is required.
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        optionalfirstFormGroup.get('phone')?.hasError('pattern')
+                      "
+                    >
+                      Please enter a valid telephone number.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div>
+                  <button
+                    mat-raised-button
+                    matStepperNext
+                    color="accent"
+                    type="submit"
+                    [disabled]="optionalfirstFormGroup.invalid"
+                  >
+                    Next
+                  </button>
+                </div>
+              </form>
+            </mat-step>
+  
+            <!-- DONE STEP -->
+            <mat-step>
+              <ng-template matStepLabel>Update</ng-template>
+              You are now done.
+  
+              <ng-template matStepLabel>Review Your Data</ng-template>
+  
+              <h3>Company Information</h3>
+              <div>
+                <p>
+                  <strong>Company Name:</strong>
+                  {{ optionalfirstFormGroup.get("companyName")?.value }}
+                </p>
+                <p>
+                  <strong>Country:</strong>
+                  {{ optionalfirstFormGroup.get("country")?.value }}
+                </p>
+                <p>
+                  <strong>Prefix:</strong>
+                  {{ optionalfirstFormGroup.get("prefix")?.value }}
+                </p>
+                <p>
+                  <strong>VAT:</strong>
+                  {{ optionalfirstFormGroup.get("vat")?.value }}
+                </p>
+              </div>
+  
+              <div class="button-row m-t-20">
+                <button mat-raised-button color="primary" matStepperPrevious>
+                  Back
+                </button>
+                <button mat-raised-button color="warn" (click)="updateCustomer()">
+                  Update
+                </button>
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
+

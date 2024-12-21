@@ -1,4 +1,6 @@
 export interface User{
+    displayName: string;
+    uid: any;
     userId:string;
     companyName:string;
     country: string;

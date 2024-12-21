@@ -34,6 +34,9 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef>Actiont</th>
       <td mat-cell *matCellDef="let product">
+        <button mat-button color="warn"  (click)="selectProduct(product.id)">
+          Select
+        </button>
         <button [routerLink]="['/products/productDetails/', product.id]" mat-button color="primary" >
           Edit
 		</button>
