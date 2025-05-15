@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
 import { AuthGuard } from './services/auth.guard';
+import { GuestGuard } from './services/guest.guard';
 
 export const AppRoutes: Routes = [
   {
@@ -24,7 +25,8 @@ export const AppRoutes: Routes = [
       },
       {
         path: 'user',
-        loadChildren: () => import('./user/user.module').then(m => m.UserModule)
+        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
+        canActivate: [GuestGuard]
       },
       {
         path: 'invoices',

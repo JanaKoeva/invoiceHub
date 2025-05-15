@@ -14,6 +14,8 @@ import { CustomerRoutes } from './cusomers.routing';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CustomerFormComponent } from './customer-form/customer-form.component';
+import { StoreModule } from '@ngrx/store';
+import { customerReducer } from './state/customer.reducer';
 
 
 @NgModule({
@@ -33,6 +35,7 @@ import { CustomerFormComponent } from './customer-form/customer-form.component';
     FormsModule,
     MatTableModule,
     RouterModule.forChild(CustomerRoutes),
+    StoreModule.forFeature('customer', customerReducer),
   ]
 })
 export class CustomersModule { 

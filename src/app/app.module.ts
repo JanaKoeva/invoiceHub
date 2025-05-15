@@ -31,6 +31,8 @@ import { MatTableModule } from '@angular/material/table';
 import { JwtinterceptorService } from './services/jwtinterceptor.service';
 import { MatListModule } from '@angular/material/list';
 import { SharedModule } from './shared/shared.module';
+import { StoreModule } from '@ngrx/store';
+import { invoiceReducer } from './invoices/state/invoice.reducer';
 
 
 
@@ -68,7 +70,9 @@ import { SharedModule } from './shared/shared.module';
     AngularFireAuthModule,
     ReactiveFormsModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule,
+    StoreModule.forRoot({ invoice: invoiceReducer }),
 
   ],
   providers: [

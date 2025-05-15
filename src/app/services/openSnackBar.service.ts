@@ -11,7 +11,7 @@ export class SnackbarService {
 
  
   openSnackBar(name: string, message: string) {
-    this.snackBar.open(`${name}: ${message}`, 'Close', {
+    this.snackBar.open(`${name}`, `${message}`, {
       duration: 2000,
       panelClass: ['snackbar-success'] 
     });

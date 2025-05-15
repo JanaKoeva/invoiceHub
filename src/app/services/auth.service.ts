@@ -16,10 +16,11 @@ export interface UserData {
 })
 export class AuthService implements OnInit {
 
-  private userSubject: BehaviorSubject<UserData | null> = new BehaviorSubject<UserData | null>(null);
+  public userSubject: BehaviorSubject<UserData | null> = new BehaviorSubject<UserData | null>(null);
   public user$ = this.userSubject.asObservable();
 
-  private isLogged = new BehaviorSubject<boolean>(false); // Initialize as logged out
+  public isLogged = new BehaviorSubject<boolean>(false); // Initialize as logged out
+ 
   // isLogged$ = this.isLogged.asObservable(); // Observable for components to subscribe to
 
   constructor() {
@@ -50,7 +51,7 @@ export class AuthService implements OnInit {
       email: localStorage.getItem('firebaseEmail'),
       idToken: localStorage.getItem('firebaseIdToken')
     }
-    console.log(storedUserData);
+   
 
     if (storedUserData.userId && storedUserData.email && storedUserData.idToken) {
       const userData: UserData = {
@@ -88,6 +89,8 @@ export class AuthService implements OnInit {
 
   setLoginStatus(status: boolean) {
     this.isLogged.next(status); 
+    console.log();
+    
   }
   getAuthToken(): any {
     let token = localStorage.getItem('firebaseIdToken')
@@ -101,5 +104,10 @@ export class AuthService implements OnInit {
   isAuthenticated() {
     return localStorage.getItem('firebaseIdToken') !== null;
   };
+
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('firebaseIdToken'); 
+    return !!token; 
+  }
 
 }

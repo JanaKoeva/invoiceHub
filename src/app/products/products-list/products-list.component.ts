@@ -107,10 +107,12 @@ export class ProductsListComponent {
 
 
   selectProduct(product: any): void {
-    console.log('Selected product:', product);
+    
+    const rowIndex = this.route.snapshot.queryParams['rowIndex'];
+    const customerId = this.route.snapshot.queryParams['customerId'];
 
     this.router.navigate(['/invoices/invoiceForm'], {
-      queryParams: { productId: product },
+      queryParams:  { productId: product, rowIndex, customerId } ,
     });
   }
 
@@ -140,6 +142,7 @@ export class ProductsListComponent {
       },
       (error) => {
         console.error('Error deleting customer:', error);
+        
         this.snackBar.openSnackBar('Failed to delete customer. Please try again.', 'Close');
       }
     )

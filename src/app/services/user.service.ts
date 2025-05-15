@@ -36,7 +36,6 @@ export class UserService {
 
   }
   // https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCfexypHBvDSXGk9OhRy_nktWRyZ6HmawI
-
   register(data: any): Observable<any> {
     //add the user in Authentication
     const body = {

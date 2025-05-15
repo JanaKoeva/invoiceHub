@@ -2,96 +2,174 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { UserService } from './user.service';
-import { Subject, catchError, defaultIfEmpty, map, of, switchMap } from 'rxjs';
+import { Subject, catchError, defaultIfEmpty, map, of, switchMap, take } from 'rxjs';
 import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InvoiceService {
-  userId:any
-  idToken:any
+  userId: any
+  idToken: any
   initialInvoiceNumber: string = '1000000001'; // Start invoice number
-  invoiceNumber!: string;
+  invoiceNumber!: number;
   lastInvoiceNumber: number = 0;
   clientName: string = '';
   amount: number = 0;
   newInvoiceNumber: string = '';
-   userData!: any;
-  constructor(private http: HttpClient, private userService:UserService,private authService:AuthService) {
-    this.userData=authService.getUserData();
-    console.log(this.userData);
-    
-   }
+  userData!: any;
 
- 
-  getLastAndInclementInvoiceNumber(){
-    // const url = `${this.apiUrl}/invoice_counter/last_invoice_number`;
+  constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) {
 
-    this.http.get('/api/database/loaddata/invoices', this.userData).subscribe(res => {
-      const inv:any = res;
+    this.userData = authService.getUserData();
 
-      if (inv.length > 0) {
-        const lastInvoice = inv.reduce((max:any, inv:any) => {
-          const currentInvoiceNumber = parseInt(inv.fields.invoiceNumber.stringValue);
-          return currentInvoiceNumber > max ? currentInvoiceNumber : max;
-      },0);
+  }
 
-       // Увеличаване на последния номер с 1
-       this.lastInvoiceNumber = lastInvoice + 1;
-       this.newInvoiceNumber = this.lastInvoiceNumber.toString();
-    } else {
-      // Ако няма фактури, започваме от 1001
-      this.newInvoiceNumber = this.initialInvoiceNumber;
-    }
-  })
-return  this.newInvoiceNumber
-}
 
-  // incrementInvoiceNumber(): string {
-  //   const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, ''); // Format: YYYYMMDD
-  //   const number: number = (+this.getLastAndInclementInvoiceNumber() + 1);
-  //   this.invoiceNumber = number.toString();
-  //   return `INV-${datePart}-${this.invoiceNumber}`;
-  // }
-
-getAll(): any {
+  getLatsInvoiceNumber(): Observable<any> {
+    debugger
+    return this.userData.pipe(
+      take(1), 
+      switchMap((data: any) => {
+        const userId = data?.userId;
   
-  return this.authService.getUserData().pipe(
-    switchMap((userData) => {
-      console.log(userData);
-      this.userId = userData?.userId;
-      this.idToken = userData?.idToken
+        if (!userId) {
+          console.warn('No userId found in userData');
+          return of(this.initialInvoiceNumber);
+        }
+        console.log('User ID:', userId);
+        const body = {
+          parent: `projects/invoicehub-467aa/databases/(default)/documents/users/${userId}`,
+          structuredQuery: {
+            from: [{ collectionId: 'invoices' }],
+            where: {
+              fieldFilter: {
+                field: { fieldPath: 'userId' },
+                op: 'EQUAL',
+                value: { stringValue: userId }
+              }
+            },
+            orderBy: [
+              {
+                field: { fieldPath: 'invoiceNumber' },
+                direction: 'DESCENDING'
+              }
+            ],
+            limit: 1,
+           
+          }
+        };
+        console.log('Request Body:', JSON.stringify(body, null, 2));
+        const url = '/api/database/lastInvoice'
+        //const url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:runQuery`;
+  
+        return this.http.post<any[]>(url, body);
+      }),
+      map((res: any[]) => {
+        
+      // Log the full response for debugging purposes
+      console.log('Response:', res);
 
-      const url = `/api/database/loaddata/${this.userId}/`;
-      
+      // Check if response contains a document
+      if (res.length > 0 && res[0]?.document?.fields) {
+        // Access the invoiceNumber field properly
+        const invoiceField = res[0]?.document?.fields?.invoiceNumber?.stringValue;
+        
+        if (invoiceField) {
+          console.log('Last Invoice Number (String):', invoiceField);
 
-      return this.http.get<{ documents: [] }>(url).pipe(
-        map(response => response.documents || []),
-        catchError((error) => {
-          console.error('Error fetching products:', error);
-          return of([]);
-        })
-      );
-    }),
+          // Parse invoiceNumber (string to number)
+          const lastInvoice = parseInt(invoiceField, 10);
 
-    defaultIfEmpty([])
-  );
-}
+          if (!isNaN(lastInvoice)) {
+            console.log('Last Invoice Number (Parsed):', lastInvoice);
+            return lastInvoice + 1;  // Add 1 to the last invoice number
+          } else {
+            console.warn('Invalid invoiceNumber format:', invoiceField);
+            return this.initialInvoiceNumber;
+          }
+        } else {
+          console.warn('No invoiceNumber field in response.');
+          return this.initialInvoiceNumber;
+        }
+      } else {
+        console.warn('No invoices found or document structure is unexpected.');
+        return this.initialInvoiceNumber;
+      }
+      }),
+      catchError((error) => {
+        console.error('Error fetching last invoice number:', error);
+        return of(this.initialInvoiceNumber);
+      })
+    );
 
-  // Създайте нова фактура
-  createInvoice(data:any): Observable<any> {
-    const url = `${'/api/database/create'}/users/${data.userId}/invoices`;
+
+  }
+
+
+  getAll(): any {
+
+    return this.authService.getUserData().pipe(
+      switchMap((userData) => {
+        console.log(userData);
+        this.userId = userData?.userId;
+        this.idToken = userData?.idToken
+
+        const url = `/api/database/loaddata/${this.userId}/`;
+
+
+        return this.http.get<{ documents: [] }>(url).pipe(
+          map(response => response.documents || []),
+          catchError((error) => {
+            console.error('Error fetching products:', error);
+            return of([]);
+          })
+        );
+      }),
+
+      defaultIfEmpty([])
+    );
+  }
+
+  // Създаване на нова фактура
+  createInvoice(data: any): Observable<any> {
+    const url = `${'/api/database/invoices/create'}/users/${data.userData.userId}`;
+   
     const body = {
       fields: {
-        invoiceNumber: { stringValue: data.invoiceNumber },
-        customer: { stringValue: data.customer },
-        amount: { doubleValue: data.amount },
-        date: { timestampValue: data.date}
+        invoiceNumber: {  stringValue: data.invoiceData.invoiceNumber 
+          },
+            
+       
+        customer: {
+          mapValue: {
+            fields: {
+              companyName: { stringValue: data.customerData.companyName },
+              address: { stringValue: data.customerData.companyName },
+              vat: { stringValue: data.customerData.vat },
+              prefix: { stringValue: data.customerData.prefix },
+              bankName: { stringValue: data.customerData.bankName },
+              iban: { stringValue: data.customerData.prefix },
+              swift: { stringValue: data.customerData.swift },
+            }
+          }
+        },
+    date: {
+      timestampValue: data.invoiceData.date
+    },
+        amount: {
+          mapValue: {
+            fields: { 
+              total: { doubleValue: data.total } 
+            }
+          }
+        }, products: data.productsData,
       }
-    };
+        
+      }
+      console.log(JSON.stringify(body, null, 2));
     return this.http.post(url, body, {
-      
+
     });
   }
 

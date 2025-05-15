@@ -5,106 +5,118 @@
     <!-- Header Section -->
     <div class="invoice-header">
       <div class="invoice-container mat-elevation-z4">
-        <button 
-          mat-stroked-button 
-          color="primary" 
-          class="left-button" 
-          (click)="goToCustomerList()">
+        <button
+          mat-stroked-button
+          color="primary"
+          class="left-button"
+          (click)="goToCustomerList()"
+        >
           <mat-icon>arrow_back</mat-icon> Go to Customer List
         </button>
-      <!-- Left Column: Customer Data -->
-      <form [formGroup]="customerForm">
-      <div class="header-column left">
-        <mat-label>Customer</mat-label>
-        <!-- Company Name Field  -->
-          <mat-form-field>
-            <mat-label>Company Name</mat-label>
-            <input matInput formControlName="companyName" placeholder="Company Name">
-          </mat-form-field>
-      
-          <!-- User Email Display -->
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input matInput formControlName="address" placeholder="address">
-          </mat-form-field>
-      
-          <!-- User VAT Display -->
-          <mat-form-field>
-            <mat-label>Prefix</mat-label>
-            <input matInput formControlName="prefix" placeholder="prefix">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Vat number</mat-label>
-            <input matInput formControlName="vat" placeholder="Vat number">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Bank name</mat-label>
-            <input matInput formControlName="country" placeholder="Cuntry">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>IBAN</mat-label>
-            <input matInput formControlName="phone" placeholder="Telephone">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Bank code/SWIFT</mat-label>
-            <input matInput formControlName="email" placeholder="Email">
-          </mat-form-field>
+        <!-- Left Column: Customer Data -->
+        <form [formGroup]="customerForm">
+          <div class="header-column left">
+            <mat-label>Customer</mat-label>
+            <!-- Company Name Field  -->
+            <mat-form-field>
+              <mat-label>Company Name</mat-label>
+              <input
+                matInput
+                formControlName="companyName"
+                placeholder="Company Name"
+              />
+            </mat-form-field>
+
+            <!-- User Email Display -->
+            <mat-form-field>
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" placeholder="address" />
+            </mat-form-field>
+
+            <!-- User VAT Display -->
+            <mat-form-field>
+              <mat-label>Prefix</mat-label>
+              <input matInput formControlName="prefix" placeholder="prefix" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Vat number</mat-label>
+              <input matInput formControlName="vat" placeholder="Vat number" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Bank name</mat-label>
+              <input matInput formControlName="bankName" placeholder="Bank name" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>IBAN</mat-label>
+              <input matInput formControlName="iban" placeholder="IBAN" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Bank code/SWIFT</mat-label>
+              <input matInput formControlName="swift" placeholder="Swift" />
+            </mat-form-field>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
-  <form [formGroup]="invoiceForm">
-      <!-- Center Column: Invoice Number and Date -->
-      <div class="header-column center">
-        <mat-form-field>
-          <mat-label>Invoice number</mat-label>
-          <input matInput formControlName="invoiceNumber" >
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Date</mat-label>
-          <input matInput formControlName="date" >
-        </mat-form-field>
-      </div>
-    </form> 
-<!-- ------------------------------------------------------------------------------------------- -->
+      <form [formGroup]="invoiceForm">
+        <!-- Center Column: Invoice Number and Date -->
+        <div class="header-column center">
+          <mat-form-field>
+            <mat-label>Invoice number</mat-label>
+            <input matInput formControlName="invoiceNumber" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Date</mat-label>
+            <input matInput formControlName="date" />
+          </mat-form-field>
+        </div>
+      </form>
+      <!-- ------------------------------------------------------------------------------------------- -->
       <!-- Right Column: Logged User Data -->
-     
+
       <form [formGroup]="userForm">
         <div class="header-column right">
           <mat-label>Suplyer</mat-label>
           <!-- Company Name Field -->
           <mat-form-field>
             <mat-label>Company Name</mat-label>
-            <input matInput formControlName="companyName" placeholder="Suplyer Name">
+            <input
+              matInput
+              formControlName="companyName"
+              placeholder="Suplyer Name"
+            />
           </mat-form-field>
-      
+
           <!-- User Email Display -->
           <mat-form-field>
             <mat-label>Address</mat-label>
-            <input matInput formControlName="address" placeholder="address">
+            <input matInput formControlName="address" placeholder="address" />
           </mat-form-field>
-      
+
           <!-- User VAT Display -->
           <mat-form-field>
             <mat-label>Prefix</mat-label>
-            <input matInput formControlName="prefix" placeholder="prefix">
+            <input matInput formControlName="prefix" placeholder="prefix" />
           </mat-form-field>
           <mat-form-field>
             <mat-label>Vat number</mat-label>
-            <input matInput formControlName="vat" placeholder="Vat number">
+            <input matInput formControlName="vat" placeholder="Vat number" />
           </mat-form-field>
           <mat-form-field>
             <mat-label>Bank name</mat-label>
-            <input matInput formControlName="bankName" placeholder="Bank name">
+            <input
+              matInput
+              formControlName="bankName"
+              placeholder="Bank name"
+            />
           </mat-form-field>
           <mat-form-field>
             <mat-label>IBAN</mat-label>
-            <input matInput formControlName="iban" placeholder="IBAN">
+            <input matInput formControlName="iban" placeholder="IBAN" />
           </mat-form-field>
           <mat-form-field>
             <mat-label>Bank code/SWIFT</mat-label>
-            <input matInput formControlName="swift" placeholder="Swift">
+            <input matInput formControlName="swift" placeholder="Swift" />
           </mat-form-field>
-
         </div>
       </form>
     </div>
@@ -112,56 +124,79 @@
 </mat-card>
 
 
-<mat-card>
-<mat-card-content>
-<ng-container matColumnDef="product"><button 
-  mat-stroked-button 
-  color="primary" 
-  class="left-button" 
-  (click)="goToProductsList()">
-  <mat-icon>arrow_back</mat-icon> Go to Products List
-</button>
-</ng-container>
-</mat-card-content>
-</mat-card>
+<form [formGroup]="productForm">
+  <div formArrayName="products">
+    <table mat-table class="mat-elevation-z8" [dataSource]="dataSource">
+      <ng-container matColumnDef="product">
+        <th mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Product</mat-label>
+            <input 
+            matInput 
+            formControlName="productName"
+            (input)="updateProductInStore(i)"
+            type="string"
+            />
+            <button mat-icon-button matSuffix (click)="goToProductsList(i)">Go to products</button>
+            <button mat-icon-button matSuffix (click)="deleteProductRow(i)">Delete row</button>
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-<mat-table [formGroup]="productForm" class="mat-elevation-z8">
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Quantity</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="pieces"
+              (input)="updateProductInStore(i)"
+              (input)="updateTotalAmount(i)"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-  <!-- Define Columns -->
-  <ng-container matColumnDef="product">
-    <th mat-header-cell *matHeaderCellDef> Product </th>
-    <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
-  </ng-container>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Price</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="price"
+              (input)="updateProductInStore(i)"
+              (input)="updateTotalAmount(i)"
+            />
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="quantity">
-    <th mat-header-cell *matHeaderCellDef> Quantity </th>
-    <td mat-cell *matCellDef="let element">
-      <input matInput [formControl]="element.quantityControl" type="number" />
-    </td>
-  </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+          <mat-form-field>
+            <mat-label>Total</mat-label>
+            <input matInput formControlName="total" />
+          </mat-form-field>
+        </td>
+      </ng-container>
 
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef> Price </th>
-    <td mat-cell *matCellDef="let element">
-      <input matInput [formControl]="element.priceControl" type="number" />
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="total">
-    <th mat-header-cell *matHeaderCellDef> Total </th>
-    <td mat-cell *matCellDef="let element">
-      <p></p>
-    </td>
-  </ng-container>
-
-  <!-- Header Row -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-  <!-- Data Rows -->
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</mat-table>
-
-
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns;"[attr.data-index]="trackByIndex(row)"
+      ></tr>
+    </table>
+  </div>
+  <button type="button" mat-button color="primary" (click)="addProduct()">
+    Add New Product
+  </button>
+</form>
 
 <!-- IIII -->
 <mat-card>
@@ -171,15 +206,15 @@
       <div class="summary-row">
         <div class="summary-item">
           <p><strong>Amount (Excl. VAT):</strong></p>
-          <p>AMOUNT</p>
+          <p>{{ amountExclVat | number: '1.2-2' }} лв.</p>
         </div>
         <div class="summary-item">
           <p><strong>VAT (VAT RATE%):</strong></p>
-          <p>VAT AMOUNT</p>
+          <p>{{ vatRate | number: '1.2-2' }} лв.</p>
         </div>
         <div class="summary-item">
           <p><strong>Amount (Incl. VAT):</strong></p>
-          <p>TOTAL AMOUNT</p>
+          <p>{{ totalAmount | number: '1.2-2' }} лв.</p>
         </div>
       </div>
 
@@ -188,8 +223,16 @@
       <!-- Amount in Words -->
       <div class="summary-words">
         <p><strong>Total in Words:</strong></p>
-        <p>WORDS</p>
+        <p>{{ totalInWords }}</p>
       </div>
     </div>
   </mat-card-content>
 </mat-card>
+<div class="button-row m-t-20">
+  <button mat-raised-button color="primary" matStepperPrevious>
+    Back
+  </button>
+  <button mat-raised-button color="warn" (click)="createInvoice()">
+    Create
+  </button>
+</div>

@@ -2,15 +2,13 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, Component, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators,EmailValidator, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators,FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, startWith, map } from 'rxjs';
 import { DemoMaterialModule } from 'src/app/demo-material-module';
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomerService } from 'src/app/services/customer.service';
 import { SnackbarService } from 'src/app/services/openSnackBar.service';
-import { UserService } from 'src/app/services/user.service';
-import { matchPasswordValidator } from 'src/app/utils/matchPasswordsValidator';
 
 @Component({
   selector: 'app-customer-form',

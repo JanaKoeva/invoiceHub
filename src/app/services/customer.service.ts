@@ -18,7 +18,6 @@ export class CustomerService {
   constructor(private http: HttpClient, private userService: UserService, private authService: AuthService) { }
 
   getCustomers(): any {
-
     return this.authService.getUserData().pipe(
 
       // filter((userData): userData is { userId: string; token: string, email:string } => 
@@ -98,7 +97,11 @@ export class CustomerService {
               address: { stringValue: data.address },
               email: { stringValue: data.email },
               phone: { stringValue: data.phone },
-              name: { stringValue: data.name }
+              name: { stringValue: data.name },
+              bankName:{stringValue: data.bankName},
+              swift:{stringValue: data.swift},
+              iban:{stringValue: data.iban},
+
             }
           };
 

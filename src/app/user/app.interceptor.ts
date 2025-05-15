@@ -1,4 +1,3 @@
-import { U } from '@angular/cdk/keycodes';
 import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Provider } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -88,7 +87,7 @@ export class AppInterceptor implements HttpInterceptor {
       let urlParts = req.url.split('/')
       const collection = urlParts[urlParts.length - 1];
       const userId = urlParts[urlParts.length - 2]
-// /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
+      // /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
       req = req.clone({
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}`),
         withCredentials: true,
@@ -100,7 +99,7 @@ export class AppInterceptor implements HttpInterceptor {
       let urlParts = req.url.split('/')
       const collection = urlParts[urlParts.length - 1];
       const userId = urlParts[urlParts.length - 2]
-// /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
+      // /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
       req = req.clone({
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${userId}/${collection}`),
         withCredentials: true,
@@ -124,7 +123,7 @@ export class AppInterceptor implements HttpInterceptor {
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}/${docId}`),
         withCredentials: true,
       })
-    }else if (req.url.startsWith('/api/database/editCustomer')) {
+    } else if (req.url.startsWith('/api/database/editCustomer')) {
       console.log(req.url);
 
       const firestoreUrl = environment.apiEndpoints.firestore;
@@ -136,12 +135,12 @@ export class AppInterceptor implements HttpInterceptor {
 
       console.log(userId);
       console.log(`${firestoreUrl}/users/${userId}/${collection}/${docId}`);
-      
+
       req = req.clone({
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}/${docId}`),
         withCredentials: true,
       })
-    }else if (req.url.startsWith('/api/database/deleteCustomer')) {
+    } else if (req.url.startsWith('/api/database/deleteCustomer')) {
       console.log(req.url);
 
       const firestoreUrl = environment.apiEndpoints.firestore;
@@ -153,12 +152,49 @@ export class AppInterceptor implements HttpInterceptor {
 
       console.log(userId);
       console.log(`${firestoreUrl}/users/${userId}/${collection}/${docId}`);
-      
+
       req = req.clone({
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}/${docId}`),
         withCredentials: true,
       })
-    }
+    }else if (req.url.startsWith('/api/database/lastInvoice')) {
+//POST https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents:runQuery
+
+      console.log(req.body);
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      // let urlParts = req.url.split('/')
+      // console.log(urlParts);
+      const userId = req.body.structuredQuery.where.fieldFilter.value.stringValue;
+
+      console.log(userId);
+      console.log(`${firestoreUrl}/users/${userId}/invoices/(default)/documents:structuredQuery`);
+
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}:runQuery`),
+        withCredentials: true,
+      })
+    }else if (req.url.startsWith('/api/database/invoices/create')) {
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      const urlParts = req.url.split('/');
+      const collection = urlParts[urlParts.length - 4];
+      const userId = urlParts[urlParts.length - 1];
+
+      console.log(userId);
+      console.log(collection);
+
+      console.log(`${firestoreUrl}/users/${userId}/${collection}`);
+
+
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}`),
+        withCredentials: true,
+      })
+
+    return next.handle(req);
+
+  }
 
     return next.handle(req);
 

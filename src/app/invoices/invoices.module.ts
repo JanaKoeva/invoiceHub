@@ -13,6 +13,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
+import { StoreModule } from '@ngrx/store';
+import { invoiceReducer } from './state/invoice.reducer';
 
 
 
@@ -20,6 +22,7 @@ import { MatButton } from '@angular/material/button';
   declarations: [],
   imports: [
     CommonModule,
+    MatTableModule,
     FormsModule,
     ReactiveFormsModule,
      MatTable, 
@@ -33,6 +36,7 @@ import { MatButton } from '@angular/material/button';
     MatInputModule,
     MatDatepickerModule,
     MatTableModule,
+    StoreModule.forFeature('invoice', invoiceReducer),
 
   ]
 })
