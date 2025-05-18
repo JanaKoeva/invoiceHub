@@ -160,18 +160,21 @@ export class AppInterceptor implements HttpInterceptor {
     }else if (req.url.startsWith('/api/database/lastInvoice')) {
 //POST https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents:runQuery
 
-      console.log(req.body);
 
       const firestoreUrl = environment.apiEndpoints.firestore;
-      // let urlParts = req.url.split('/')
-      // console.log(urlParts);
-      const userId = req.body.structuredQuery.where.fieldFilter.value.stringValue;
+    
+       const userId = req.body.userId;
 
-      console.log(userId);
-      console.log(`${firestoreUrl}/users/${userId}/invoices/(default)/documents:structuredQuery`);
+       const firestoreBody = {
+      
+        structuredQuery: req.body.structuredQuery // 👈 Use the original query
+      };
+      // console.log(userId);
+      // console.log(`${firestoreUrl}/users/${userId}/invoices/(default)/documents:structuredQuery`);
 
       req = req.clone({
-        url: req.url.replace(req.url, `${firestoreUrl}:runQuery`),
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}:runQuery`),
+        body: firestoreBody,
         withCredentials: true,
       })
     }else if (req.url.startsWith('/api/database/invoices/create')) {

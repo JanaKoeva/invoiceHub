@@ -27,7 +27,7 @@ export class InvoiceService {
 
 
   getLatsInvoiceNumber(): Observable<any> {
-    debugger
+    
     return this.userData.pipe(
       take(1), 
       switchMap((data: any) => {
@@ -39,16 +39,18 @@ export class InvoiceService {
         }
         console.log('User ID:', userId);
         const body = {
-          parent: `projects/invoicehub-467aa/databases/(default)/documents/users/${userId}`,
+          userId,
+          //parent: `projects/invoicehub-467aa/databases/(default)/documents/users/${userId}/invoices`,
+            parent: `projects/invoicehub-467aa/databases/(default)/documents/users/${userId}`,
           structuredQuery: {
             from: [{ collectionId: 'invoices' }],
-            where: {
-              fieldFilter: {
-                field: { fieldPath: 'userId' },
-                op: 'EQUAL',
-                value: { stringValue: userId }
-              }
-            },
+            // where: {
+            //   fieldFilter: {
+            //     field: { fieldPath: 'userId' },
+            //     op: 'EQUAL',
+            //     value: { stringValue: userId }
+            //   }
+            // },
             orderBy: [
               {
                 field: { fieldPath: 'invoiceNumber' },

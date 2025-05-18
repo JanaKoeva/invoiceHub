@@ -109,7 +109,7 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+debugger
     //clear the store
     this.store.select(selectIsNewInvoice).pipe(take(1)).subscribe((isNewInvoice) => {
 
@@ -164,7 +164,7 @@ export class InvoiceFormComponent implements OnInit {
     this.currentInvoiceNumber = this.invoiceService.getLatsInvoiceNumber().subscribe(number => {
       if (number) {
         this.invoiceForm.patchValue({
-          invoiceNumber: number || '',
+          invoiceNumber: String(number) || '',
         })
 
 
@@ -465,8 +465,10 @@ export class InvoiceFormComponent implements OnInit {
             return;
           }
           // Successful registration
-          this.snackBar.openSnackBar('Successful create customer!' + combinedData.customerData.email, 'Close');
-          this.router.navigate(['/invoices/invoiceForm']);
+          this.snackBar.openSnackBar('Successful save new invoice No ' + combinedData.invoiceData.invoiceNumber, 'Close');
+          this.router.navigate(['/invoices/invoiceForm']).then(() => {
+            this.invoiceForm.reset(); 
+          });;
         },
         error: (error: any) => {
 
