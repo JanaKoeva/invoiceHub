@@ -157,16 +157,16 @@ export class AppInterceptor implements HttpInterceptor {
         url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}/${docId}`),
         withCredentials: true,
       })
-    }else if (req.url.startsWith('/api/database/lastInvoice')) {
-//POST https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents:runQuery
+    } else if (req.url.startsWith('/api/database/lastInvoice')) {
+      //POST https://firestore.googleapis.com/v1/projects/YOUR_PROJECT_ID/databases/(default)/documents:runQuery
 
 
       const firestoreUrl = environment.apiEndpoints.firestore;
-    
-       const userId = req.body.userId;
 
-       const firestoreBody = {
-      
+      const userId = req.body.userId;
+
+      const firestoreBody = {
+
         structuredQuery: req.body.structuredQuery // 👈 Use the original query
       };
       // console.log(userId);
@@ -177,7 +177,7 @@ export class AppInterceptor implements HttpInterceptor {
         body: firestoreBody,
         withCredentials: true,
       })
-    }else if (req.url.startsWith('/api/database/invoices/create')) {
+    } else if (req.url.startsWith('/api/database/invoices/create')) {
 
       const firestoreUrl = environment.apiEndpoints.firestore;
       const urlParts = req.url.split('/');
@@ -195,9 +195,41 @@ export class AppInterceptor implements HttpInterceptor {
         withCredentials: true,
       })
 
-    return next.handle(req);
+      return next.handle(req);
 
-  }
+    } else if (req.url.startsWith('/api/database/loadAllInvoices')) {
+
+      console.log(req.url);
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      let urlParts = req.url.split('/')
+      const collection = urlParts[urlParts.length - 1];
+      const userId = urlParts[urlParts.length - 2]
+      // /users/ozg88S9OvwTDiLd88ES71txZ3Tg1/ozg88S9OvwTDiLd88ES71txZ3Tg1/uprJpgiXarhdPbwzy7cy
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}`),
+        withCredentials: true,
+      })
+    }
+    else if (req.url.startsWith('/api/database/getSingle')) {
+      console.log(req.url);
+
+      const firestoreUrl = environment.apiEndpoints.firestore;
+      let urlParts = req.url.split('/')
+      console.log(urlParts);
+      const docId = urlParts[urlParts.length - 1];
+      const collection = urlParts[urlParts.length - 2]
+      const userId = urlParts[urlParts.length - 3]
+
+      console.log(userId);
+      console.log(`${firestoreUrl}/users/${userId}/${collection}/${docId}`);
+
+      // /api/database/users/{userId}/customers/{documentId}/customers/{customerId}
+      req = req.clone({
+        url: req.url.replace(req.url, `${firestoreUrl}/users/${userId}/${collection}/${docId}`),
+        withCredentials: true,
+      })
+    }
 
     return next.handle(req);
 

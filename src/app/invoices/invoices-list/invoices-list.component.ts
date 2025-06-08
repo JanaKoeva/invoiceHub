@@ -57,12 +57,12 @@ export class InvoicesListComponent {
   displayedColumns: string[] = ['id', 'Number', 'Date', 'Customer', 'VAt Number', 'Amount', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   customers$!: Observable<Array<Customer>>;
-  customers: Customer[] = [];
-  customer!: Customer;
+  invoices: any[] = [];
+  invoice!: Invoice;
   userId: any;
   customerId: any;
   private customersSubscription!: Subscription;
-  invoices!: any;
+ 
 
   // @ViewChild('shoes') shoes: MatSelectionList | undefined;
   // typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
@@ -78,60 +78,62 @@ export class InvoicesListComponent {
 
   ngOnInit(): void {
     this.userId = this.route.snapshot.params['userId'];
-    this.customerId = this.route.snapshot.params['customerId'];
+    // this.invoiceId = this.route.snapshot.params['invoiceId'];
 
-    this.invoiceServices.getAll().subscribe((customers: any[]) => {
-
-      const transformedCustomers = customers.map((invoice: {
-         id: string, name: string; 
-         fields: { 
-          
-          id: { stringValue: any; }; 
-         number: { stringValue: any; }; 
-         date: { stringValue: any; }; 
-         custumer: { stringValue: any; }; 
-         vat: { stringValue: any; },
-         amount: { stringValue: any; } }; }) => (
-        {
-          id: invoice.name.split('/').pop(),
-          date:invoice.fields.date?.stringValue || 'N/A',
-          number: invoice.fields.number?.stringValue || 'N/A',
-          custumer: invoice.fields.custumer?.stringValue || 'N/A',
-          vat: invoice.fields.vat?.stringValue || 'N/A',
-          amount: invoice.fields.amount?.stringValue || 'N/A',
-          
-        }));
-      this.dataSource.data = transformedCustomers;
-      this.invoices = this.dataSource.data||[];
-
+    this.invoiceServices.getAll().subscribe((invoices: any[]) => {
+      // Ensure invoices is an array and has elements
+      if (!Array.isArray(invoices) || invoices.length === 0) {
+        console.log("No invoices found");
+        this.dataSource.data = [];
+        return;
+      }
+      
+      // Transform the Firestore documents
+      const transformedInvoices = invoices.map((doc: any) => {
+        const fields = doc.fields || {};
+        
+        return {
+          id: doc.name?.split("/").pop() || "N/A",
+          invoiceNumber: fields.invoiceNumber?.stringValue || "N/A",
+          date: fields.date?.timestampValue || "N/A",
+          customer: fields.customer?.mapValue.fields.companyName.stringValue || "N/A",
+          amount: fields.amount?.mapValue.fields.total.doubleValue || "0",
+          vat: fields.amount?.mapValue.fields.total.doubleValue? (Number(fields.amount?.mapValue.fields.total.doubleValue) / 6).toFixed(2) : "0",
+        };
+      });
+      
+      console.log(" invoices:", transformedInvoices);
+    
+      // Assign to dataSource
+      this.dataSource.data = transformedInvoices;
+      this.invoices = transformedInvoices;
     });
-  
 
   
-    if (!this.customerId) {
-      console.error('Customer ID is missing.');
-      return;
-    }
+    // if (!this.invoiceId) {
+    //   console.error('Customer ID is missing.');
+    //   return;
+    // }
 
 
     // Confirm before deleting
-    const confirmation = window.confirm(`Are you sure you want to delete the customer with ID ${this.customerId}?`);
-    if (!confirmation) {
-      return;
-    }
+    // const confirmation = window.confirm(`Are you sure you want to delete the customer with ID ${this.customerId}?`);
+    // if (!confirmation) {
+    //   return;
+    // }
 
-    this.customerService.deleteCustomer(this.customerId).subscribe(
-      () => {
-        this.snackBar.openSnackBar(`${this.customerId} isdeleted successfully.`, 'Close');
-        this.loadCustomers();
-        // this.customers = this.customers.filter(customer =>this.customer.id !== this.customerId);
-        this.router.navigate(['customers/customerList']);
-      },
-      (error) => {
-        console.error('Error deleting customer:', error);
-        this.snackBar.openSnackBar('Failed to delete customer. Please try again.', 'Close');
-      }
-    )
+    // this.customerService.deleteCustomer(this.customerId).subscribe(
+    //   () => {
+    //     this.snackBar.openSnackBar(`${this.customerId} isdeleted successfully.`, 'Close');
+    //     this.loadCustomers();
+    //     // this.customers = this.customers.filter(customer =>this.customer.id !== this.customerId);
+    //     this.router.navigate(['customers/customerList']);
+    //   },
+    //   (error) => {
+    //     console.error('Error deleting customer:', error);
+    //     this.snackBar.openSnackBar('Failed to delete customer. Please try again.', 'Close');
+    //   }
+    // )
 
 
   }

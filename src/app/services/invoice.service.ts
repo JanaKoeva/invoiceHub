@@ -117,7 +117,7 @@ export class InvoiceService {
         this.userId = userData?.userId;
         this.idToken = userData?.idToken
 
-        const url = `/api/database/loaddata/${this.userId}/`;
+        const url = `/api/database/loadAllInvoices/users/${this.userId}/invoices`;
 
 
         return this.http.get<{ documents: [] }>(url).pipe(

@@ -23,6 +23,7 @@ import { Customer } from '../../interfaces/customer';
 import { HttpClient } from '@angular/common/http';
 import { SnackbarService } from '../../services/openSnackBar.service';
 import { ProductsService } from 'src/app/services/products.service';
+import { Product } from 'src/app/interfaces/product';
 
 
 @Component({
@@ -56,8 +57,8 @@ export class ProductsListComponent {
   displayedColumns: string[] = ['code', 'name', 'pack', 'price', 'action'];
   dataSource = new MatTableDataSource<any>([]);
   products$!: Observable<Array<Customer>>;
-  products: Customer[] = [];
-  product!: Customer;
+  products: Product[] = [];
+  product!: Product;
   userId: any;
   prductId: any;
   private customersSubscription!: Subscription;
@@ -78,7 +79,7 @@ export class ProductsListComponent {
     console.log(this.products);
     const products = this.route.snapshot.data['products']
 
-    const transformedCustomers = products.map((customer: {
+    const transformedProducts = products.map((product: {
       id: string,
       name: string;
       fields: {
@@ -90,14 +91,14 @@ export class ProductsListComponent {
       }
     }) => (
       {
-        id: customer.name.split('/').pop(),
-        name: customer.fields.productName?.stringValue || 'N/A',
-        code: customer.fields.productCode?.stringValue || 'N/A',
-        pack: customer.fields.pack?.stringValue || 'N/A',
-        price: customer.fields.price?.stringValue || 'N/A',
+        id: product.name.split('/').pop(),
+        name: product.fields.productName?.stringValue || 'N/A',
+        code: product.fields.productCode?.stringValue || 'N/A',
+        pack: product.fields.pack?.stringValue || 'N/A',
+        price: product.fields.price?.stringValue || 'N/A',
 
       }));
-    this.dataSource.data = transformedCustomers;
+    this.dataSource.data = transformedProducts;
     console.log(this.dataSource.data);
 
     this.products = this.dataSource.data || [];
@@ -156,12 +157,12 @@ export class ProductsListComponent {
     this.productService.getProducts().subscribe(
       (customers: any[]) => {
         // Transform the customer data
-        const transformedCustomers = customers.map((customer: { id: string, fields: any }) => ({
-          id: customer.id, // Assuming you get the ID as 'id'
-          name: customer.fields.name?.stringValue || 'N/A',
-          code: customer.fields.productCode?.stringValue || 'N/A',
-          price: customer.fields.price?.stringValue || 'N/A',
-          pack: customer.fields.pack?.stringValue || 'N/A',
+        const transformedCustomers = customers.map((product: { id: string, fields: any }) => ({
+          id: product.id, // Assuming you get the ID as 'id'
+          name: product.fields.name?.stringValue || 'N/A',
+          code: product.fields.productCode?.stringValue || 'N/A',
+          price: product.fields.price?.stringValue || 'N/A',
+          pack: product.fields.pack?.stringValue || 'N/A',
         }));
 
         // Set the transformed data to the dataSource

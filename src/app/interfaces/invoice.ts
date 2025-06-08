@@ -3,7 +3,8 @@ import { Product } from "./product";
 
 export interface Invoice {
     id: string,
-    number: string,
+    invoiceNumber: string,
+    date:string,
     custumer: Customer,
     products: Product[],
     vat: string,
